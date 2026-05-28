@@ -1,24 +1,45 @@
 # word-cloud
 
-## Project setup
+App Vue 3 + Vite que gera uma nuvem de palavras com as letras das músicas mais tocadas no Brasil.
+
+## Setup
+
 ```
-yarn install
+npm install
 ```
 
-### Compiles and hot-reloads for development
+## Desenvolvimento (hot-reload)
+
 ```
-yarn serve
+npm run dev
 ```
 
-### Compiles and minifies for production
+Abre em `http://localhost:3333`.
+
+> **Sobre o proxy / CORS:** as APIs externas (iTunes, Vagalume, lyrics.ovh) bloqueiam
+> chamadas diretas do browser. O `vite.config.js` define um **proxy de desenvolvimento**
+> (`/api/itunes`, `/api/vagalume`, `/api/lyrics`) que repassa as requisições e contorna o CORS.
+> Esse proxy só existe em `npm run dev`.
+
+## Build de produção
+
 ```
-yarn build
+npm run build
+npm run preview
 ```
 
-### Lints and fixes files
+> **Limitação em produção:** o proxy de dev não existe no build estático. O ranking
+> (iTunes RSS) permite CORS, mas as APIs de letras podem não permitir — um deploy real
+> precisaria de um pequeno backend/serverless para intermediar as chamadas de letra.
+
+## Lint
+
 ```
-yarn lint
+npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Fontes de dados
+
+- **Ranking:** iTunes RSS — `https://itunes.apple.com/br/rss/topsongs/limit=25/json` (sem auth).
+- **Letras:** Vagalume (principal) com fallback para lyrics.ovh (sem key). Músicas sem
+  letra são ignoradas sem quebrar a geração da nuvem.

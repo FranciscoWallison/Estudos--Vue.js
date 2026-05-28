@@ -1,0 +1,6 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - heading "Word Cloud Spotify" [level=1] [ref=e4]
+    - paragraph [ref=e5]: O que as músicas brasileiras mais tocadas mais falam?
+  - main [ref=e6]:
+    - paragraph [ref=e8]: Buscando as músicas mais tocadas...

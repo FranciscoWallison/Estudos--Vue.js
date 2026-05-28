@@ -1,9 +1,8 @@
-version: '3' # vs mais atual
 networks:
   word-cloud:
     driver: bridge
-services:             
 
+services:
   app:
     build: app
     container_name: word-cloud-spotify-app
@@ -13,8 +12,9 @@ services:
       - word-cloud
     ports:
       - "3333:3333"
-    volumes:       
-      - ./app:/src/app
-    working_dir: /src/app
+    volumes:
+      - ./app:/usr/src/app
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
     environment:
-     - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_USEPOLLING=true
