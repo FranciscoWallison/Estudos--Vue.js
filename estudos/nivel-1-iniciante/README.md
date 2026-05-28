@@ -87,6 +87,10 @@ button { padding: 8px 16px; }
 - **Destructurar `reactive()`** → perde reatividade. Use `toRefs()` se precisar.
 - **Mutar prop diretamente** → emita evento para o pai.
 
+## Exemplos resolvidos
+
+- [01 — Reatividade e Virtual DOM](exemplos/01-reatividade/) — o mesmo contador em JS puro vs Vue 3, lado a lado e explicado.
+
 ## Próximos passos
 
 Faça os [desafios](desafios.md) na ordem, e revise o [Q&A](perguntas-respostas.md). Depois vá para [nível 2](../nivel-2-componentes/).

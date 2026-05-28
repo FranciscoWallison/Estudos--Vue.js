@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reatividade — JavaScript puro</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 420px; margin: 40px auto; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+    button { padding: 6px 14px; margin-right: 6px; cursor: pointer; }
+    .total { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Versão JavaScript puro</h1>
+
+  <div class="card">
+    <p>Camisas — R$ <span class="preco"></span></p>
+    <button class="adicionar">Adicionar</button>
+    <button class="remover">Remover</button>
+    <span>Quantidade: <span class="total"></span></span>
+    <p class="total">Total: R$ <span class="precoTotal"></span></p>
+  </div>
+
+  <script>
+    // 1. O "estado" é um objeto comum. Ninguém observa ele.
+    const dados = { preco: 49, total: 0 };
+
+    // 2. Pegamos cada elemento do DOM na mão.
+    const preco = document.querySelector(".preco");
+    const total = document.querySelector(".total");
+    const precoTotal = document.querySelector(".precoTotal");
+    const adicionar = document.querySelector(".adicionar");
+    const remover = document.querySelector(".remover");
+
+    // 3. Pintamos a tela com o estado inicial (manualmente).
+    preco.innerText = dados.preco;
+    total.innerText = dados.total;
+    precoTotal.innerText = dados.preco * dados.total;
+
+    // 4. A cada mudança, NÓS precisamos lembrar de re-sincronizar a tela.
+    function incrementar() {
+      dados.total++;
+      atualizarUI(); // se esquecer esta linha, a tela "congela"
+    }
+
+    function diminuir() {
+      if (dados.total > 0) dados.total--;
+      atualizarUI();
+    }
+
+    // 5. Função que copia o estado para o DOM. O "COMO" da atualização.
+    function atualizarUI() {
+      total.innerText = dados.total;
+      precoTotal.innerText = dados.total * dados.preco;
+    }
+
+    // 6. Ligamos os eventos manualmente.
+    adicionar.addEventListener("click", incrementar);
+    remover.addEventListener("click", diminuir);
+  </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reatividade — Vue 3 (Composition API)</title>
+
+  <!-- Vue 3 via CDN: não precisa de npm/build para este exemplo -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 420px; margin: 40px auto; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+    button { padding: 6px 14px; margin-right: 6px; cursor: pointer; }
+    .total { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Versão Vue 3 (Composition API)</h1>
+
+  <!-- O template descreve O QUE mostrar, não COMO atualizar -->
+  <div id="app" class="card">
+    <p>Bermudas — R$ <span>{{ preco }}</span></p>
+    <button @click="adicionar">Adicionar</button>
+    <button @click="remover">Remover</button>
+    <span>Quantidade: {{ total }}</span>
+    <p class="total">Total: R$ {{ valorTotal }}</p>
+  </div>
+
+  <script>
+    // Pegamos as funções do objeto global Vue (porque viemos do CDN).
+    // Em projeto com Vite, seria: import { createApp, ref, computed } from 'vue'
+    const { createApp, ref, computed } = Vue;
+
+    createApp({
+      setup() {
+        // ref() cria um valor REATIVO. Vue passa a "observar" ele.
+        const preco = ref(69);
+        const total = ref(0);
+
+        // computed() = valor DERIVADO. Recalcula sozinho quando preco ou total mudam.
+        // É o equivalente automático da função atualizarUI() do JS puro.
+        const valorTotal = computed(() => preco.value * total.value);
+
+        // No JS (dentro do setup) usamos .value para ler/escrever um ref.
+        function adicionar() {
+          total.value++;
+          // repare: NÃO chamamos nenhuma "atualizarUI". Vue faz sozinho.
+        }
+
+        function remover() {
+          if (total.value > 0) total.value--;
+        }
+
+        // Tudo que o template usa precisa ser retornado aqui.
+        return { preco, total, valorTotal, adicionar, remover };
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>
