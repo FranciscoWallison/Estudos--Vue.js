@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do — Vue 3 (Composition API via CDN)</title>
+
+  <!-- Vue 3 via CDN: nenhum npm/build necessário para este exemplo -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 40px auto; color: #222; }
+    h1 { font-size: 1.3rem; }
+    form { display: flex; gap: 8px; margin-bottom: 16px; }
+    input[type="text"] { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+    button { padding: 8px 14px; cursor: pointer; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; align-items: center; gap: 8px; padding: 8px; border-bottom: 1px solid #eee; }
+    li.feita span { text-decoration: line-through; color: #999; }
+    li span { flex: 1; }
+    .remover { color: #c00; border-color: #f0caca; }
+  </style>
+</head>
+<body>
+  <h1>To-Do — Vue 3 ✨</h1>
+  <p>O template descreve O QUE mostrar. O Vue cuida de COMO atualizar a tela.</p>
+
+  <!-- ESTE bloco é controlado pelo Vue (por causa do mount("#app")) -->
+  <div id="app">
+    <!-- @submit.prevent = escuta o submit já chamando event.preventDefault() -->
+    <form @submit.prevent="adicionar">
+      <!-- v-model = ligação de mão dupla: o input e a variável 'texto' andam juntos -->
+      <input type="text" v-model="texto" placeholder="Nova tarefa..." autocomplete="off" />
+      <button type="submit">Adicionar</button>
+    </form>
+
+    <ul>
+      <!-- v-for cria um <li> por item. :key ajuda o Vue a rastrear cada um. -->
+      <!-- :class amarra a classe 'feita' ao dado tarefa.feita -->
+      <li v-for="tarefa in tarefas" :key="tarefa.id" :class="{ feita: tarefa.feita }">
+        <input type="checkbox" v-model="tarefa.feita" />
+        <span>{{ tarefa.texto }}</span>
+        <button class="remover" @click="remover(tarefa.id)">✕</button>
+      </li>
+    </ul>
+
+    <!-- valor sempre atualizado, sem nenhuma função para isso -->
+    <p>Total: {{ tarefas.length }} tarefa(s)</p>
+  </div>
+
+  <script>
+    // Via CDN, as funções vêm do objeto global Vue.
+    // Em projeto com Vite seria: import { createApp, ref } from 'vue'
+    const { createApp, ref } = Vue;
+
+    createApp({
+      setup() {
+        // ref() cria valores REATIVOS — o Vue "observa" e re-renderiza sozinho.
+        const texto = ref("");
+        const tarefas = ref([]);
+        let proximoId = 1;
+
+        function adicionar() {
+          const t = texto.value.trim();
+          if (!t) return;
+          // só damos push no array. NÃO existe "renderizar()". O Vue cuida.
+          tarefas.value.push({ id: proximoId++, texto: t, feita: false });
+          texto.value = ""; // limpa o input (o v-model reflete na tela)
+        }
+
+        function remover(id) {
+          tarefas.value = tarefas.value.filter((t) => t.id !== id);
+        }
+
+        // Tudo que o template usa precisa ser retornado aqui.
+        return { texto, tarefas, adicionar, remover };
+      },
+    }).mount("#app");
+  </script>
+</body>
+</html>

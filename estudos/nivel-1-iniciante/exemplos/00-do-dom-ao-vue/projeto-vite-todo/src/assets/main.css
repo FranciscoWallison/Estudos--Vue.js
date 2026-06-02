@@ -1,0 +1,25 @@
+/* CSS global — passa pelo build do Vite (importado em main.js). */
+:root {
+  --verde: #42b883;
+  --cinza: #999;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  max-width: 520px;
+  margin: 40px auto;
+  padding: 0 16px;
+  color: #222;
+  line-height: 1.5;
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  padding: 8px 14px;
+}
+button:hover { border-color: var(--verde); }

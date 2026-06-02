@@ -89,6 +89,7 @@ button { padding: 8px 16px; }
 
 ## Exemplos resolvidos
 
+- [00 — Do DOM ao Vue](exemplos/00-do-dom-ao-vue/) — **comece por aqui.** A trilha completa: manipular o DOM na mão → Vue → `createApp` → [arquitetura de pastas](exemplos/00-do-dom-ao-vue/ARQUITETURA.md) → [ferramentas](exemplos/00-do-dom-ao-vue/FERRAMENTAS.md), com um [projeto Vite real](exemplos/00-do-dom-ao-vue/projeto-vite-todo/) no fim.
 - [01 — Reatividade e Virtual DOM](exemplos/01-reatividade/) — o mesmo contador em JS puro vs Vue 3, lado a lado e explicado.
 
 ## Próximos passos

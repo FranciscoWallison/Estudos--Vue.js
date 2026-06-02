@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>createApp — anatomia peça por peça</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; color: #222; line-height: 1.5; }
+    h1 { font-size: 1.3rem; }
+    .box { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    .box h2 { font-size: 1rem; margin-top: 0; color: #2c5; }
+    button { padding: 6px 12px; cursor: pointer; border: 1px solid #ccc; border-radius: 6px; background: #fff; margin-right: 6px; }
+    code { background: #f3f3f3; padding: 1px 5px; border-radius: 4px; }
+    .nota { font-size: .9rem; color: #666; }
+  </style>
+</head>
+<body>
+  <h1>🔬 Anatomia do <code>createApp</code></h1>
+  <p>
+    Abra o <strong>Console do navegador (F12)</strong> e acompanhe os logs.
+    Esta página tem <strong>DUAS apps Vue independentes</strong> na mesma tela —
+    cada <code>createApp().mount()</code> controla só o seu pedaço de HTML.
+  </p>
+
+  <!-- ───────── APP 1 ───────── -->
+  <div class="box" id="app-um">
+    <h2>App #1 — montada em #app-um</h2>
+    <p>Contador: {{ count }}</p>
+    <button @click="count++">+1</button>
+    <button @click="count = 0">zerar</button>
+    <p class="nota">Esta app NÃO enxerga a App #2. São mundos separados.</p>
+  </div>
+
+  <!-- ───────── APP 2 ───────── -->
+  <div class="box" id="app-dois">
+    <h2>App #2 — montada em #app-dois</h2>
+    <p>Mensagem: <strong>{{ msg }}</strong></p>
+    <button @click="gritar">gritar</button>
+    <p class="nota">Tem seu próprio estado (msg), totalmente isolado.</p>
+  </div>
+
+  <!-- Este parágrafo está FORA de qualquer mount → o Vue ignora. -->
+  <p class="nota">⛔ Isto está fora de #app-um e #app-dois: {{ count }} fica literal, o Vue não toca aqui.</p>
+
+  <script>
+    const { createApp, ref, computed, onMounted } = Vue;
+
+    // ════════════════════════════════════════════════════════════════
+    //  (A) createApp({...})  → cria uma INSTÂNCIA de aplicação.
+    //      O objeto passado é o "componente raiz".
+    //  (B) setup()           → roda UMA vez; é onde nasce o estado reativo.
+    //  (C) return {...}      → "vitrine": só o que está aqui o template vê.
+    //  (D) .mount("#sel")    → conecta a app a um elemento real do DOM.
+    // ════════════════════════════════════════════════════════════════
+
+    const app1 = createApp({
+      // (B)
+      setup() {
+        const count = ref(0); // estado reativo
+
+        // lifecycle: roda quando a app já está "colada" no DOM
+        onMounted(() => console.log("[App #1] montada em #app-um"));
+
+        // (C) — repare: 'segredo' NÃO está no return, então o template não acessa
+        const segredo = "não aparece no template";
+
+        return { count }; // só count fica visível ao template
+      },
+    });
+
+    // (D) — só agora a app vira realidade na tela
+    app1.mount("#app-um");
+
+    // ── Uma segunda app, 100% independente ──
+    createApp({
+      setup() {
+        const msg = ref("olá");
+        function gritar() {
+          msg.value = msg.value.toUpperCase() + "!";
+        }
+        onMounted(() => console.log("[App #2] montada em #app-dois"));
+        return { msg, gritar };
+      },
+    }).mount("#app-dois"); // dá pra encadear create + mount numa linha só
+
+    console.log(
+      "%cDuas apps, dois mounts, dois estados isolados.",
+      "color:#2c5;font-weight:bold"
+    );
+
+    // ────────────────────────────────────────────────────────────────
+    // EM UM PROJETO COM VITE, este mesmo trecho vira o arquivo src/main.js:
+    //
+    //   import { createApp } from 'vue'
+    //   import App from './App.vue'      // o componente raiz vem de um arquivo
+    //   createApp(App).mount('#app')     // mesma ideia, só 1 app
+    //
+    // Veja: projeto-vite-todo/src/main.js
+    // ────────────────────────────────────────────────────────────────
+  </script>
+</body>
+</html>

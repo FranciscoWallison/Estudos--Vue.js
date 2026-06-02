@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do — JavaScript puro (manipulando o DOM na mão)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 40px auto; color: #222; }
+    h1 { font-size: 1.3rem; }
+    form { display: flex; gap: 8px; margin-bottom: 16px; }
+    input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+    button { padding: 8px 14px; cursor: pointer; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; align-items: center; gap: 8px; padding: 8px; border-bottom: 1px solid #eee; }
+    li.feita span { text-decoration: line-through; color: #999; }
+    li span { flex: 1; }
+    .remover { color: #c00; border-color: #f0caca; }
+  </style>
+</head>
+<body>
+  <h1>To-Do — JavaScript puro 🛠️</h1>
+  <p>Tudo aqui é feito na mão: criar elementos, ligar eventos e redesenhar.</p>
+
+  <!-- A tela tem "buracos" vazios. Quem preenche é o JS, manualmente. -->
+  <form id="form">
+    <input id="campo" placeholder="Nova tarefa..." autocomplete="off" />
+    <button type="submit">Adicionar</button>
+  </form>
+
+  <ul id="lista"></ul>
+  <p>Total: <span id="contador">0</span> tarefa(s)</p>
+
+  <script>
+    // ───────────────────────────────────────────────────────────────
+    // 1. O ESTADO é um array comum. Ninguém "observa" ele.
+    // ───────────────────────────────────────────────────────────────
+    let tarefas = []; // ex: [{ id, texto, feita }]
+    let proximoId = 1;
+
+    // 2. Pegamos cada elemento do DOM na mão.
+    const form = document.querySelector("#form");
+    const campo = document.querySelector("#campo");
+    const lista = document.querySelector("#lista");
+    const contador = document.querySelector("#contador");
+
+    // ───────────────────────────────────────────────────────────────
+    // 3. A função que COPIA o estado para a tela. O "COMO" da atualização.
+    //    Repare: apagamos tudo e reconstruímos os <li> do zero, na mão.
+    // ───────────────────────────────────────────────────────────────
+    function renderizar() {
+      lista.innerHTML = ""; // limpa a tela
+
+      tarefas.forEach((tarefa) => {
+        const li = document.createElement("li");
+        if (tarefa.feita) li.classList.add("feita");
+
+        // checkbox de "feita"
+        const check = document.createElement("input");
+        check.type = "checkbox";
+        check.checked = tarefa.feita;
+        check.addEventListener("change", () => alternarFeita(tarefa.id));
+
+        // texto
+        const span = document.createElement("span");
+        span.innerText = tarefa.texto;
+
+        // botão remover
+        const botao = document.createElement("button");
+        botao.innerText = "✕";
+        botao.className = "remover";
+        botao.addEventListener("click", () => removerTarefa(tarefa.id));
+
+        // montamos a árvore nó por nó
+        li.appendChild(check);
+        li.appendChild(span);
+        li.appendChild(botao);
+        lista.appendChild(li);
+      });
+
+      // se esquecer esta linha, o contador "congela" no valor antigo
+      contador.innerText = tarefas.length;
+    }
+
+    // ───────────────────────────────────────────────────────────────
+    // 4. A cada mudança no estado, NÓS precisamos lembrar de re-renderizar.
+    // ───────────────────────────────────────────────────────────────
+    function adicionarTarefa(texto) {
+      tarefas.push({ id: proximoId++, texto, feita: false });
+      renderizar(); // <-- esqueça isto e a tela trava. É o "pulo do gato" da dor.
+    }
+
+    function removerTarefa(id) {
+      tarefas = tarefas.filter((t) => t.id !== id);
+      renderizar();
+    }
+
+    function alternarFeita(id) {
+      const t = tarefas.find((t) => t.id === id);
+      if (t) t.feita = !t.feita;
+      renderizar();
+    }
+
+    // 5. Ligamos os eventos manualmente.
+    form.addEventListener("submit", (e) => {
+      e.preventDefault(); // sem isso a página recarrega
+      const texto = campo.value.trim();
+      if (!texto) return;
+      adicionarTarefa(texto);
+      campo.value = "";
+    });
+
+    // 6. Pintura inicial.
+    renderizar();
+  </script>
+</body>
+</html>
