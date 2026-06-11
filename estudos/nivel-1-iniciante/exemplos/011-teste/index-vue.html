@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 2 - Carrinho em Vue.js</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+    <!-- id="root" - elemento onde o Vue vai "montar" a aplicação -->
+    <main class="container py-4" id="root">
+        <div class="card" style="max-width: 320px;">
+            <div class="card-body">
+                <!-- {{ }} - interpolação: imprime o valor de uma variável reativa na tela -->
+                <h5 class="card-title">{{ produto }}</h5>
+                <p class="card-text">Preço: R$ {{ preco }}</p>
+
+                <!-- @click - escuta o evento de clique e chama um método -->
+                <div class="btn-group mb-3">
+                    <button class="btn btn-outline-danger" @click="remover">-</button>
+                    <span class="btn btn-light disabled">{{ quantidade }}</span>
+                    <button class="btn btn-outline-success" @click="adicionar">+</button>
+                </div>
+
+                <!-- precoTotal é uma "computed": recalcula sozinha quando quantidade muda -->
+                <p class="fw-bold mb-0">Total: R$ {{ precoTotal }}</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Importa o Vue 3 direto da CDN (sem build/instalação) -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            // data() - estado reativo: ao mudar, a tela atualiza sozinha
+            data() {
+                return {
+                    produto: 'Roupa',
+                    preco: 49,
+                    quantidade: 0
+                };
+            },
+            // computed - valores DERIVADOS do estado; o Vue só recalcula quando algo que ele usa muda
+            computed: {
+                precoTotal() {
+                    return this.preco * this.quantidade;
+                }
+            },
+            // methods - funções acionadas pelo template (ex.: @click)
+            methods: {
+                adicionar() {
+                    this.quantidade++;
+                },
+                remover() {
+                    // evita quantidade negativa
+                    if (this.quantidade > 0) {
+                        this.quantidade--;
+                    }
+                }
+            }
+        })
+        // mount - conecta a aplicação ao elemento #root do HTML
+        .mount('#root');
+    </script>
+</body>
+
+</html>
