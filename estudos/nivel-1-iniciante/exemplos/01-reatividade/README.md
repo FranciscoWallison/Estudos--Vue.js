@@ -204,3 +204,10 @@ Faça estas mudanças e observe o que acontece:
 
 4. Acrescente um botão **Zerar** que faz `total.value = 0`. Compare quantas linhas
    isso exige em cada versão.
+
+---
+
+## Próximo passo
+
+➡️ [02-carrinho-de-compras](../02-carrinho-de-compras/) — o mesmo conceito num mini
+carrinho, e a ponte entre **Options API** e Composition API.

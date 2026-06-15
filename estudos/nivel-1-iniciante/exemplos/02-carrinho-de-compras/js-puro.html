@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho — JavaScript puro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+    <main class="container py-4">
+        <h1 class="h4 mb-3">Versão JavaScript puro</h1>
+        <div class="card" style="max-width: 320px;">
+            <div class="card-body">
+                <!-- Os valores começam VAZIOS no HTML. É o JS que vai preenchê-los na mão. -->
+                <h5 class="card-title" id="produto"></h5>
+                <p class="card-text">Preço: R$ <span id="preco"></span></p>
+
+                <div class="btn-group mb-3">
+                    <button class="btn btn-outline-danger" id="btn-remover">-</button>
+                    <span class="btn btn-light disabled" id="quantidade"></span>
+                    <button class="btn btn-outline-success" id="btn-adicionar">+</button>
+                </div>
+
+                <p class="fw-bold mb-0">Total: R$ <span id="precoTotal"></span></p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 1. O "estado" é um objeto comum. Ninguém observa ele.
+        const dados = { produto: 'Roupa', preco: 49, quantidade: 0 };
+
+        // 2. Pegamos cada elemento do DOM na mão (o Vue dispensa tudo isto).
+        const produtoEl = document.querySelector('#produto');
+        const precoEl = document.querySelector('#preco');
+        const quantidadeEl = document.querySelector('#quantidade');
+        const precoTotalEl = document.querySelector('#precoTotal');
+        const btnAdicionar = document.querySelector('#btn-adicionar');
+        const btnRemover = document.querySelector('#btn-remover');
+
+        // 3. Pintamos a tela com o estado inicial — manualmente.
+        produtoEl.innerText = dados.produto;
+        precoEl.innerText = dados.preco;
+        atualizarUI();
+
+        // 4. A cada clique, NÓS precisamos lembrar de re-sincronizar a tela.
+        function adicionar() {
+            dados.quantidade++;
+            atualizarUI(); // se esquecer esta linha, a tela "congela"
+        }
+
+        function remover() {
+            if (dados.quantidade > 0) dados.quantidade--;
+            atualizarUI();
+        }
+
+        // 5. Função que copia o estado para o DOM. O "COMO" da atualização —
+        //    é exatamente o que vira a `computed` precoTotal no Vue.
+        function atualizarUI() {
+            quantidadeEl.innerText = dados.quantidade;
+            precoTotalEl.innerText = dados.preco * dados.quantidade;
+        }
+
+        // 6. Ligamos os eventos manualmente (no Vue isto é o @click no template).
+        btnAdicionar.addEventListener('click', adicionar);
+        btnRemover.addEventListener('click', remover);
+    </script>
+</body>
+
+</html>
