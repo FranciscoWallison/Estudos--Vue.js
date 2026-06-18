@@ -208,6 +208,5 @@ Esse é exatamente o bug que o Vue elimina.
 
 ## Próximo passo
 
-➡️ Faça os [desafios do nível 1](../../desafios.md) e revise o
-[Q&A](../../perguntas-respostas.md). Depois siga para o
-[nível 2 — Componentes](../../../nivel-2-componentes/).
+➡️ [03-tela-de-login](../03-tela-de-login/) — aplica `v-model`, validação com `computed`
+e `@submit.prevent` num formulário de login (só Vue 3).

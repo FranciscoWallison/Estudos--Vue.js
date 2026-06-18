@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de login — Vue 3 (Composition API)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+    <main class="container py-4" id="app">
+        <h1 class="h4 mb-3">Tela de login — Vue 3</h1>
+
+        <div class="card" style="max-width: 360px;">
+            <div class="card-body">
+
+                <!-- v-if / v-else: troca a tela inteira conforme o estado "logado". -->
+                <!-- Enquanto NÃO está logado, mostramos o formulário. -->
+                <form v-if="!logado" @submit.prevent="entrar" novalidate>
+
+                    <!-- v-model: liga o input à variável `email` nos DOIS sentidos.
+                         Digitou no campo → muda `email`. Mudou `email` → muda o campo. -->
+                    <div class="mb-3">
+                        <label class="form-label">E-mail</label>
+                        <input
+                            v-model="email"
+                            type="email"
+                            class="form-control"
+                            :class="{ 'is-invalid': tentouEnviar && !emailValido }"
+                            placeholder="voce@exemplo.com">
+                        <!-- A mensagem só aparece se o usuário tentou enviar e o e-mail é inválido. -->
+                        <div class="invalid-feedback" v-if="tentouEnviar && !emailValido">
+                            Informe um e-mail válido.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Senha</label>
+                        <div class="input-group">
+                            <!-- :type é um v-bind: o tipo do input MUDA conforme `mostrarSenha`.
+                                 É reatividade aplicada a um atributo, não só ao texto. -->
+                            <input
+                                v-model="senha"
+                                :type="mostrarSenha ? 'text' : 'password'"
+                                class="form-control"
+                                :class="{ 'is-invalid': tentouEnviar && !senhaValida }"
+                                placeholder="mínimo 6 caracteres">
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary"
+                                @click="mostrarSenha = !mostrarSenha">
+                                {{ mostrarSenha ? 'Ocultar' : 'Mostrar' }}
+                            </button>
+                        </div>
+                        <div class="text-danger small mt-1" v-if="tentouEnviar && !senhaValida">
+                            A senha precisa ter ao menos 6 caracteres.
+                        </div>
+                    </div>
+
+                    <!-- v-model também funciona em checkbox: aqui ele guarda true/false. -->
+                    <div class="form-check mb-3">
+                        <input v-model="lembrar" type="checkbox" class="form-check-input" id="lembrar">
+                        <label class="form-check-label" for="lembrar">Lembrar-me</label>
+                    </div>
+
+                    <!-- :disabled liga o botão a uma computed. Enquanto o form for inválido
+                         (ou estiver enviando), o botão fica desabilitado — sem if na mão. -->
+                    <button class="btn btn-primary w-100" type="submit" :disabled="!formValido || enviando">
+                        <!-- v-if/v-else para mostrar o estado de "carregando". -->
+                        <span v-if="enviando">Entrando…</span>
+                        <span v-else>Entrar</span>
+                    </button>
+                </form>
+
+                <!-- Tela mostrada DEPOIS do login. O Vue troca sozinho quando `logado` vira true. -->
+                <div v-else class="text-center">
+                    <p class="mb-1">✅ Login realizado!</p>
+                    <p class="text-muted">Bem-vindo, <strong>{{ email }}</strong>.</p>
+                    <button class="btn btn-outline-secondary btn-sm" @click="sair">Sair</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Vue 3 via CDN: não precisa de npm/build para este exemplo. -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        // Em projeto com Vite seria: import { createApp, ref, computed } from 'vue'
+        const { createApp, ref, computed } = Vue;
+
+        createApp({
+            setup() {
+                // --- Estado reativo (cada ref é um "campo" que o template observa) ---
+                const email = ref('');
+                const senha = ref('');
+                const lembrar = ref(false);
+                const mostrarSenha = ref(false);
+                const enviando = ref(false);     // true enquanto "fala com o servidor"
+                const logado = ref(false);       // true depois do login
+                const tentouEnviar = ref(false); // só mostra erros DEPOIS da 1ª tentativa
+
+                // --- Validação: computed = valor derivado, recalcula sozinho a cada tecla ---
+                // Regex simples só para o exemplo (não use isto como validação séria de e-mail).
+                const emailValido = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value));
+                const senhaValida = computed(() => senha.value.length >= 6);
+                const formValido = computed(() => emailValido.value && senhaValida.value);
+
+                // --- Ações (métodos só mudam o estado; a tela reage sozinha) ---
+                function entrar() {
+                    tentouEnviar.value = true;
+                    if (!formValido.value) return; // trava se inválido
+
+                    enviando.value = true;
+                    // setTimeout SIMULA uma chamada a um servidor (1s).
+                    // Num app real, aqui entraria um fetch/axios para a sua API.
+                    setTimeout(() => {
+                        enviando.value = false;
+                        logado.value = true;
+                    }, 1000);
+                }
+
+                function sair() {
+                    logado.value = false;
+                    email.value = '';
+                    senha.value = '';
+                    mostrarSenha.value = false;
+                    tentouEnviar.value = false;
+                }
+
+                // Tudo que o template usa precisa ser retornado aqui.
+                return {
+                    email, senha, lembrar, mostrarSenha, enviando, logado, tentouEnviar,
+                    emailValido, senhaValida, formValido,
+                    entrar, sair
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>

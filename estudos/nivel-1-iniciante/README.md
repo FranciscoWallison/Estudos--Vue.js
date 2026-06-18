@@ -92,6 +92,7 @@ button { padding: 8px 16px; }
 - [00 — Do DOM ao Vue](exemplos/00-do-dom-ao-vue/) — **comece por aqui.** A trilha completa: manipular o DOM na mão → Vue → `createApp` → [arquitetura de pastas](exemplos/00-do-dom-ao-vue/ARQUITETURA.md) → [ferramentas](exemplos/00-do-dom-ao-vue/FERRAMENTAS.md), com um [projeto Vite real](exemplos/00-do-dom-ao-vue/projeto-vite-todo/) no fim.
 - [01 — Reatividade e Virtual DOM](exemplos/01-reatividade/) — o mesmo contador em JS puro vs Vue 3, lado a lado e explicado.
 - [02 — Carrinho de compras](exemplos/02-carrinho-de-compras/) — um mini carrinho em JS puro vs Vue 3, e a ponte entre **Options API** e Composition API.
+- [03 — Tela de login](exemplos/03-tela-de-login/) — **formulários em Vue 3**: `v-model`, validação com `computed`, `@submit.prevent` e estados de tela com `v-if`.
 
 ## Próximos passos
 
