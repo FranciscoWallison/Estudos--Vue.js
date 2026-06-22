@@ -21,6 +21,7 @@ Estrutura de estudos guiada por **desafios** e **perguntas/respostas**, organiza
 | Categoria | Foco | Pasta |
 |-----------|------|-------|
 | Fundamentos de Lógica em JS | Recursividade, controle de fluxo (`return`/`break`/`continue`) e operadores lógicos | [fundamentos-js-logica/](fundamentos-js-logica/) |
+| Fundamentos da Web | Como a web funciona por baixo: certificado SSL/TLS, HTTPS e o cadeado 🔒 | [fundamentos-web/](fundamentos-web/) |
 
 ## Como usar
 
