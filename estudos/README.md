@@ -16,6 +16,12 @@ Estrutura de estudos guiada por **desafios** e **perguntas/respostas**, organiza
 | 5 | Performance, SSR e Build | [nivel-5-performance-ssr/](nivel-5-performance-ssr/) |
 | 6 | Arquitetura e Internals | [nivel-6-arquitetura/](nivel-6-arquitetura/) |
 
+### Categorias extras
+
+| Categoria | Foco | Pasta |
+|-----------|------|-------|
+| Fundamentos de Lógica em JS | Recursividade, controle de fluxo (`return`/`break`/`continue`) e operadores lógicos | [fundamentos-js-logica/](fundamentos-js-logica/) |
+
 ## Como usar
 
 1. Abra a pasta do nível atual.
